@@ -131,7 +131,7 @@ public class GeminiService {
 
         for (String text : texts) {
             ObjectNode req = requests.addObject();
-            // Removed: req.put("model", "models/" + embeddingModel); // This was incorrectly added
+            req.put("model", "models/" + embeddingModel); // Re-added: model is required in each request object for batchEmbedContents
             ObjectNode content = req.putObject("content");
             ArrayNode parts = content.putArray("parts");
             parts.addObject().put("text", text);
