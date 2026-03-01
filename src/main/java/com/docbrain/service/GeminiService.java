@@ -176,22 +176,4 @@ public class GeminiService {
         sb.append("]");
         return sb.toString();
     }
-
-    /**
-     * Lists all available Gemini models. For debugging purposes.
-     */
-    public String listAvailableModels() {
-        String url = GEMINI_BASE_URL + "/models?key=" + apiKey;
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-            return response.getBody();
-        } catch (Exception e) {
-            log.error("Failed to list Gemini models", e);
-            return "Error listing models: " + e.getMessage();
-        }
-    }
 }

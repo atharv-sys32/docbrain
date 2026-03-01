@@ -19,6 +19,8 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+    clean-disabled: false # Temporarily enable clean for debugging
+    baseline-on-migrate: true # Ensure baseline on migrate is enabled
 
   servlet:
     multipart:

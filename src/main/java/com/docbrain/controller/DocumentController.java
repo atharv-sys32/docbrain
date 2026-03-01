@@ -27,10 +27,6 @@ public class DocumentController {
     private final CacheService cacheService;
     private final GeminiService geminiService; // Inject GeminiService
 
-    @GetMapping("/api/v1/gemini/models") // Temporary debug endpoint
-    public ResponseEntity<String> listGeminiModels() {
-        return ResponseEntity.ok(geminiService.listAvailableModels());
-    }
     @PostMapping("/api/v1/collections/{collectionId}/documents")
     public ResponseEntity<Map<String, Object>> upload(
             @AuthenticationPrincipal UserDetails userDetails,
