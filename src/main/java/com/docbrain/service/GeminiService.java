@@ -23,7 +23,7 @@ public class GeminiService {
     private final String model;
     private final String embeddingModel;
 
-    private static final String GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+    private static final String GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1"; // Changed v1beta to v1
 
     public GeminiService(
             RestTemplate geminiRestTemplate,
@@ -79,7 +79,6 @@ public class GeminiService {
         String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":embedContent?key=" + apiKey;
 
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("model", embeddingModel); // Add model to request body
         ObjectNode content = requestBody.putObject("content");
         ArrayNode parts = content.putArray("parts");
         parts.addObject().put("text", text);
@@ -132,7 +131,7 @@ public class GeminiService {
 
         for (String text : texts) {
             ObjectNode req = requests.addObject();
-            req.put("model", "models/" + embeddingModel); // Ensure model is specified in each request object
+            // Removed: req.put("model", "models/" + embeddingModel); // This was incorrectly added
             ObjectNode content = req.putObject("content");
             ArrayNode parts = content.putArray("parts");
             parts.addObject().put("text", text);
