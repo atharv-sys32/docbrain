@@ -79,6 +79,7 @@ public class GeminiService {
         String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":embedContent?key=" + apiKey;
 
         ObjectNode requestBody = objectMapper.createObjectNode();
+        requestBody.put("model", embeddingModel); // Add model to request body
         ObjectNode content = requestBody.putObject("content");
         ArrayNode parts = content.putArray("parts");
         parts.addObject().put("text", text);
@@ -131,7 +132,7 @@ public class GeminiService {
 
         for (String text : texts) {
             ObjectNode req = requests.addObject();
-            req.put("model", "models/" + embeddingModel);
+            req.put("model", "models/" + embeddingModel); // Ensure model is specified in each request object
             ObjectNode content = req.putObject("content");
             ArrayNode parts = content.putArray("parts");
             parts.addObject().put("text", text);
