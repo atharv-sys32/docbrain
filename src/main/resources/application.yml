@@ -42,8 +42,8 @@ jwt:
 # Gemini AI Configuration
 gemini:
   api-key: ${GEMINI_API_KEY:}
-  model: gemini-1.5-flash
-  embedding-model: text-embedding-004
+  model: gemini-1.5-flash # Keep this for generation
+  embedding-model: gemini-embedding-001 # Corrected model name from API list
 
 # File Upload Configuration
 upload:
