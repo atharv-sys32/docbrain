@@ -3,7 +3,7 @@ spring:
     name: docbrain
 
   datasource:
-    url: jdbc:postgresql://pgvector-db.railway.internal:5432/docbrain
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:docbrain}
     username: ${PGUSER:docbrain}
     password: ${PGPASSWORD:docbrain}
     driver-class-name: org.postgresql.Driver
