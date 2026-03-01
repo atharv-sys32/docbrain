@@ -1,0 +1,17 @@
+.git
+.gitignore
+.github
+.gradle
+build
+.idea
+*.iml
+*.iws
+*.ipr
+out
+uploads
+docker-compose.yml
+README.md
+HELP.md
+.env
+*.env
+docbrain-ui
