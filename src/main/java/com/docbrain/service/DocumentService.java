@@ -123,16 +123,25 @@ public class DocumentService {
 
     private String saveFile(MultipartFile file, UUID collectionId) {
         try {
-            Path collectionDir = Paths.get(uploadDir, collectionId.toString());
-            Files.createDirectories(collectionDir);
+            // Get absolute path for upload directory to ensure it creates in the right place
+            Path baseDir = Paths.get(uploadDir).toAbsolutePath();
+            Files.createDirectories(baseDir); // Ensure base uploads directory exists
+
+            Path collectionDir = baseDir.resolve(collectionId.toString());
+            Files.createDirectories(collectionDir); // Ensure collection specific directory exists
 
             String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = collectionDir.resolve(uniqueFileName);
+
+            // Log for debugging on Railway
+            log.info("Saving file to absolute path: {}", filePath);
+
             file.transferTo(filePath.toFile());
 
             return filePath.toString();
         } catch (IOException e) {
-            throw new DocumentProcessingException("Failed to save uploaded file", e);
+            log.error("Failed to save uploaded file. Base dir: {}, Error: {}", uploadDir, e.getMessage());
+            throw new DocumentProcessingException("Failed to save uploaded file: " + e.getMessage(), e);
         }
     }
 
