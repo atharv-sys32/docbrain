@@ -43,7 +43,7 @@ jwt:
 gemini:
   api-key: ${GEMINI_API_KEY:}
   model: gemini-1.5-flash
-  embedding-model: embedding-001
+  embedding-model: text-embedding-004
 
 # File Upload Configuration
 upload:
