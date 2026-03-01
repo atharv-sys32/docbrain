@@ -3,9 +3,9 @@ spring:
     name: docbrain
 
   datasource:
-    url: jdbc:postgresql://pgvector-db.joyful-light.railway.internal:5432/docbrain
-    username: postgres
-    password: docbrain_password_123
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/docbrain}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:docbrain_password_123}
     driver-class-name: org.postgresql.Driver
 
   jpa:
