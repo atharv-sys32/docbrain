@@ -3,9 +3,9 @@ spring:
     name: docbrain
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/docbrain}
-    username: ${DATABASE_USERNAME:docbrain}
-    password: ${DATABASE_PASSWORD:docbrain}
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:docbrain}
+    username: ${PGUSER:docbrain}
+    password: ${PGPASSWORD:docbrain}
     driver-class-name: org.postgresql.Driver
 
   jpa:
