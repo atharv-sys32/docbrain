@@ -40,11 +40,15 @@ jwt:
   secret: ${JWT_SECRET:default-dev-secret-key-change-in-production-must-be-256-bits-long!!}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 
-# Gemini AI Configuration
+# Gemini AI Configuration (embeddings only)
 gemini:
   api-key: ${GEMINI_API_KEY:}
-  model: gemini-2.0-flash-lite
-  embedding-model: gemini-embedding-001 # Corrected model name from API list
+  embedding-model: gemini-embedding-001
+
+# Groq AI Configuration (text generation)
+groq:
+  api-key: ${GROQ_API_KEY:}
+  model: ${GROQ_MODEL:llama-3.3-70b-versatile}
 
 # File Upload Configuration
 upload:

@@ -19,64 +19,69 @@ public class GeminiService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final String apiKey;
-    private final String model;
+    private final String geminiApiKey;
     private final String embeddingModel;
+    private final String groqApiKey;
+    private final String groqModel;
 
-    private static final String GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"; // Reverted to v1beta
+    private static final String GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+    private static final String GROQ_BASE_URL = "https://api.groq.com/openai/v1";
 
     public GeminiService(
             RestTemplate geminiRestTemplate,
             ObjectMapper objectMapper,
-            @Value("${gemini.api-key}") String apiKey,
-            @Value("${gemini.model}") String model,
-            @Value("${gemini.embedding-model}") String embeddingModel) {
+            @Value("${gemini.api-key}") String geminiApiKey,
+            @Value("${gemini.embedding-model}") String embeddingModel,
+            @Value("${groq.api-key}") String groqApiKey,
+            @Value("${groq.model}") String groqModel) {
         this.restTemplate = geminiRestTemplate;
         this.objectMapper = objectMapper;
-        this.apiKey = apiKey;
-        this.model = model;
+        this.geminiApiKey = geminiApiKey;
         this.embeddingModel = embeddingModel;
+        this.groqApiKey = groqApiKey;
+        this.groqModel = groqModel;
     }
 
     /**
-     * Generate text using Gemini LLM.
+     * Generate text using Groq LLM (OpenAI-compatible API).
      */
     public String generateText(String prompt) {
-        String url = GEMINI_BASE_URL + "/models/" + model + ":generateContent?key=" + apiKey;
+        String url = GROQ_BASE_URL + "/chat/completions";
 
         ObjectNode requestBody = objectMapper.createObjectNode();
-        ArrayNode contents = requestBody.putArray("contents");
-        ObjectNode content = contents.addObject();
-        ArrayNode parts = content.putArray("parts");
-        parts.addObject().put("text", prompt);
+        requestBody.put("model", groqModel);
+        ArrayNode messages = requestBody.putArray("messages");
+        ObjectNode message = messages.addObject();
+        message.put("role", "user");
+        message.put("content", prompt);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(groqApiKey);
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         try {
             ResponseEntity<JsonNode> response = restTemplate.exchange(url, HttpMethod.POST, entity, JsonNode.class);
             JsonNode body = response.getBody();
 
-            if (body != null && body.has("candidates")) {
-                return body.get("candidates").get(0)
-                        .get("content").get("parts").get(0)
-                        .get("text").asText();
+            if (body != null && body.has("choices")) {
+                return body.get("choices").get(0)
+                        .get("message").get("content").asText();
             }
 
-            log.error("Unexpected Gemini response: {}", body);
-            throw new RuntimeException("Failed to get response from Gemini");
+            log.error("Unexpected Groq response: {}", body);
+            throw new RuntimeException("Failed to get response from Groq");
         } catch (Exception e) {
-            log.error("Gemini API call failed", e);
-            throw new RuntimeException("Gemini API call failed: " + e.getMessage(), e);
+            log.error("Groq API call failed", e);
+            throw new RuntimeException("Groq API call failed: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Generate embedding for a single text.
+     * Generate embedding for a single text using Gemini.
      */
     public float[] generateEmbedding(String text) {
-        String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":embedContent?key=" + apiKey;
+        String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":embedContent?key=" + geminiApiKey;
 
         ObjectNode requestBody = objectMapper.createObjectNode();
         ObjectNode content = requestBody.putObject("content");
@@ -124,14 +129,14 @@ public class GeminiService {
     }
 
     private List<float[]> generateBatch(List<String> texts) {
-        String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":batchEmbedContents?key=" + apiKey;
+        String url = GEMINI_BASE_URL + "/models/" + embeddingModel + ":batchEmbedContents?key=" + geminiApiKey;
 
         ObjectNode requestBody = objectMapper.createObjectNode();
         ArrayNode requests = requestBody.putArray("requests");
 
         for (String text : texts) {
             ObjectNode req = requests.addObject();
-            req.put("model", "models/" + embeddingModel); // Re-added: model is required in each request object for batchEmbedContents
+            req.put("model", "models/" + embeddingModel);
             ObjectNode content = req.putObject("content");
             ArrayNode parts = content.putArray("parts");
             parts.addObject().put("text", text);

@@ -11,9 +11,6 @@ public class GeminiConfig {
     @Value("${gemini.api-key}")
     private String apiKey;
 
-    @Value("${gemini.model}")
-    private String model;
-
     @Value("${gemini.embedding-model}")
     private String embeddingModel;
 
@@ -24,10 +21,6 @@ public class GeminiConfig {
 
     public String getApiKey() {
         return apiKey;
-    }
-
-    public String getModel() {
-        return model;
     }
 
     public String getEmbeddingModel() {
