@@ -2,6 +2,5 @@
 ALTER TABLE document_chunks
     ALTER COLUMN embedding TYPE vector(3072);
 
--- Add HNSW index for vector similarity search (works on empty tables unlike IVFFlat)
-CREATE INDEX IF NOT EXISTS idx_document_chunks_embedding
-    ON document_chunks USING hnsw (embedding vector_cosine_ops);
+-- Note: HNSW index has a 2000 dimension limit in pgvector, so no index is created.
+-- Sequential scan will be used for similarity search (fine for small-to-medium datasets).
