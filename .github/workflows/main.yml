@@ -55,19 +55,5 @@ jobs:
         DATABASE_USERNAME: test
         DATABASE_PASSWORD: test
         REDIS_HOST: localhost
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GEMINI_API_KEY: test_key
         JWT_SECRET: test_secret_key_which_must_be_long_enough_for_hs256
-
-    - name: Build Docker image
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: docker build -t docbrain-api .
-
-    - name: Install Railway CLI
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: npm i -g @railway/cli
-
-    - name: Deploy to Railway
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: railway up
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
