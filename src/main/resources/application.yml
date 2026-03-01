@@ -43,7 +43,7 @@ jwt:
 # Gemini AI Configuration
 gemini:
   api-key: ${GEMINI_API_KEY:}
-  model: gemini-2.0-flash # Updated from deprecated gemini-1.5-flash
+  model: gemini-2.0-flash-lite
   embedding-model: gemini-embedding-001 # Corrected model name from API list
 
 # File Upload Configuration
