@@ -5,6 +5,7 @@ import com.docbrain.model.entity.Document;
 import com.docbrain.service.CacheService;
 import com.docbrain.service.DocumentProcessingService;
 import com.docbrain.service.DocumentService;
+import com.docbrain.service.GeminiService; // Import GeminiService
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,12 @@ public class DocumentController {
     private final DocumentService documentService;
     private final DocumentProcessingService documentProcessingService;
     private final CacheService cacheService;
+    private final GeminiService geminiService; // Inject GeminiService
 
+    @GetMapping("/api/v1/gemini/models") // Temporary debug endpoint
+    public ResponseEntity<String> listGeminiModels() {
+        return ResponseEntity.ok(geminiService.listAvailableModels());
+    }
     @PostMapping("/api/v1/collections/{collectionId}/documents")
     public ResponseEntity<Map<String, Object>> upload(
             @AuthenticationPrincipal UserDetails userDetails,
