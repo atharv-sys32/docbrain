@@ -31,7 +31,7 @@ spring:
       port: ${REDIS_PORT:6379}
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 # JWT Configuration
 jwt:

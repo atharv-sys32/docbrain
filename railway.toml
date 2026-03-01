@@ -5,6 +5,6 @@ dockerfilePath = "Dockerfile"
 [deploy]
 startCommand = "java -jar app.jar"
 healthcheckPath = "/api/v1/health"
-healthcheckTimeout = 30
+healthcheckTimeout = 120
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
