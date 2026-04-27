@@ -29,7 +29,8 @@ public class RAGService {
             provided document context. If the answer is not in the context, say
             "I couldn't find this information in the uploaded documents."
 
-            Always cite your sources using [Source: document_name, chunk X] format.
+            Do NOT include any source citations, references, or [Source: ...] tags in your answer.
+            The sources are displayed separately in the UI. Just provide a clean, well-structured answer.
 
             CONTEXT:
             ---
@@ -41,7 +42,8 @@ public class RAGService {
 
             USER QUESTION: %s
 
-            Provide a detailed, accurate answer based only on the context above.
+            Provide a detailed, accurate, and well-formatted answer based only on the context above.
+            Use markdown formatting (headings, bullet points, bold) to make the answer readable.
             """;
 
     /**
