@@ -74,3 +74,11 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+# Debug Logging Config
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+    org.hibernate: INFO
+    com.docbrain: DEBUG
