@@ -1,6 +1,8 @@
 -- Index for vector similarity search (cosine distance)
-CREATE INDEX idx_document_chunks_embedding ON document_chunks
-  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+-- Note: ivfflat index has a 2000 dimension limit in pgvector.
+-- Since we are using 3072 dimensions, we cannot create this index.
+-- CREATE INDEX idx_document_chunks_embedding ON document_chunks
+--   USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
 
 -- Additional performance index
 CREATE INDEX idx_documents_collection_id ON documents(collection_id);
