@@ -15,12 +15,26 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      changes_detected: ${{ steps.changed.outputs.any_changed }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - uses: tj-actions/changed-files@v44
+        id: changed
+        with:
+          files: |
+            src/**
+            Dockerfile
+            build.gradle.kts
+            settings.gradle.kts
+            gradle/**
+            docker-compose.yml
+
       - name: Log in to the Container registry
+        if: steps.changed.outputs.any_changed == 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -29,6 +43,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
+        if: steps.changed.outputs.any_changed == 'true'
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -37,9 +52,26 @@ jobs:
             type=sha
 
       - name: Build and push Docker image
+        if: steps.changed.outputs.any_changed == 'true'
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && needs.build-and-push-image.outputs.changes_detected == 'true'
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/docbrain
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d
